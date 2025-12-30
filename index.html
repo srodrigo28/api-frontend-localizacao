@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Treina-DEV | Route Tracker</title>
+  <title>Versão 4.0. - Treina-DEV | Route </title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -49,6 +49,103 @@
       <h3 class="text-center space-y-2">Rastreamento de Rota em Tempo Real</h3>
       <p class="text-gray-400 text-sm">Destino: CEP 74961-070</p>
     </header>
+
+    <div class="flex flex-col gap-3">
+  <button id="btn" class="w-full py-4 bg-brand-purple hover:bg-brand-purpleDark text-white font-bold rounded-2xl transition-all shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+    📍 Calcular Rota
+  </button>
+  
+  <button id="openModal" class="w-full py-3 border-2 border-brand-purple text-brand-purple hover:bg-brand-purple/10 font-bold rounded-2xl transition-all">
+    🏢 Cadastrar Estabelecimento
+  </button>
+</div>
+
+<div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4">
+  <div class="bg-brand-gray border border-white/10 w-full max-w-sm rounded-3xl p-6 space-y-4 shadow-2xl">
+    <h3 class="text-xl font-bold text-brand-purple">Novo Cadastro</h3>
+    
+    <div class="space-y-3">
+      <input type="text" id="regName" placeholder="Nome Completo" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 outline-none focus:border-brand-purple transition-all">
+      <input type="text" id="regEst" placeholder="Nome do Estabelecimento" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 outline-none focus:border-brand-purple transition-all">
+      <input type="text" id="regTel" placeholder="Telefone (00) 00000-0000" maxlength="15" class="w-full bg-black/50 border border-white/10 rounded-xl p-3 outline-none focus:border-brand-purple transition-all">
+      
+      <div class="flex gap-2 text-xs text-gray-400 bg-black/30 p-2 rounded-lg">
+        <span>📍 Coordenadas:</span>
+        <span id="coordsDisplay">Aguardando GPS...</span>
+      </div>
+    </div>
+
+    <div class="flex gap-2 pt-2">
+      <button id="closeModal" class="flex-1 py-2 text-gray-400 font-medium">Cancelar</button>
+      <button id="saveData" class="flex-1 py-2 bg-brand-purple rounded-xl font-bold">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="tempView" class="hidden space-y-3">
+    <h4 class="text-xs uppercase tracking-widest text-gray-500 font-bold">Cadastrado Temporário</h4>
+    <div class="bg-gradient-to-br from-brand-purple/20 to-transparent border border-brand-purple/30 p-4 rounded-2xl">
+        <p id="viewText" class="text-sm leading-relaxed"></p>
+    </div>
+</div>
+
+<script>
+  const modal = document.getElementById("modal");
+const openModalBtn = document.getElementById("openModal");
+const closeModalBtn = document.getElementById("closeModal");
+const regTel = document.getElementById("regTel");
+const saveData = document.getElementById("saveData");
+const tempView = document.getElementById("tempView");
+const viewText = document.getElementById("viewText");
+const coordsDisplay = document.getElementById("coordsDisplay");
+
+let currentCoords = { lat: null, lng: null };
+
+// Máscara de Telefone (00) 00000-0000
+regTel.addEventListener("input", (e) => {
+  let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+  e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+});
+
+// Abrir Modal e pegar Coordenadas
+openModalBtn.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+  navigator.geolocation.getCurrentPosition((pos) => {
+    currentCoords.lat = pos.coords.latitude.toFixed(6);
+    currentCoords.lng = pos.coords.longitude.toFixed(6);
+    coordsDisplay.textContent = `${currentCoords.lat}, ${currentCoords.lng}`;
+  });
+});
+
+// Fechar Modal
+closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+// Salvar Temporário
+saveData.addEventListener("click", () => {
+  const nome = document.getElementById("regName").value;
+  const est = document.getElementById("regEst").value;
+  const tel = regTel.value;
+
+  if(!nome || !est || tel.length < 14) {
+    alert("Preencha todos os campos corretamente!");
+    return;
+  }
+
+  // Exibe na tela de forma "bonita"
+  tempView.classList.remove("hidden");
+  viewText.innerHTML = `
+    <strong>Estabelecimento:</strong> ${est}<br>
+    <strong>Responsável:</strong> ${nome}<br>
+    <strong>Contato:</strong> ${tel}<br>
+    <strong>Local:</strong> ${currentCoords.lat}, ${currentCoords.lng}
+  `;
+
+  modal.classList.add("hidden");
+  
+  // Dica: Aqui você usaria o fetch para o seu NestJS no futuro
+  console.log("Pronto para o banco:", { nome, est, tel, ...currentCoords });
+});
+</script>
 
     <section class="bg-brand-gray/50 backdrop-blur-md border border-white/10 p-6 rounded-3xl shadow-2xl space-y-6">
       
@@ -98,8 +195,8 @@
   const carTimeEl = document.getElementById("carTime")
   const bikeTimeEl = document.getElementById("bikeTime")
 
-  const targetLat = -16.782980
-  const targetLng = -49.3248
+  const targetLat = -16.8236
+  const targetLng = -49.2469
 
   let map
   let routeLayer
