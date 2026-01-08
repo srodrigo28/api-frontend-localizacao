@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>calcularkm · Playground e Mapa</title>
+  <title>Versão 4.0 - Treina-DEV | Map</title>
 
   <!-- Tailwind CSS via CDN (considere usar build próprio em produção) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,23 +11,18 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'] },
           colors: {
             brand: {
               black: '#0a0a0a',
-              gray: '#1f1f1f',
               purple: '#8b5cf6',
               purpleDark: '#6d28d9',
-              50:'#f2fbff',100:'#e6f6ff',200:'#ccecff',300:'#a3deff',400:'#6fc8ff',500:'#3fb1ff',600:'#1f89d6',700:'#186ba8',800:'#134f7b',900:'#0d3552'
+              gray: '#1f1f1f'
             }
           }
         }
-      },
-      darkMode: 'class'
-    };
+      }
+    }
   </script>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS e JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -45,73 +40,18 @@
   </style>
 </head>
 
-<body class="font-sans bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen selection:bg-brand-purple">
-
-  <!-- Top Navbar -->
-  <header class="sticky top-0 z-50 backdrop-blur bg-white/70 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2 font-semibold">
-        <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand-600 text-white">km</span>
-        <span>calcularkm</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#playground" class="hover:text-brand-600">Playground</a>
-        <a href="#mapa" class="hover:text-brand-600">Mapa</a>
-        <a href="manual-v2-java.html" class="hover:text-brand-600">Manual v2</a>
-        <a href="manual-v1-java.html" class="hover:text-brand-600">Manual v1</a>
-        <a href="README.md" class="hover:text-brand-600">README</a>
-      </nav>
-      <button id="themeToggle" class="rounded-md px-3 py-2 text-sm border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
-        Alternar tema
-      </button>
-    </div>
-  </header>
+<body class="bg-brand-black text-gray-100 min-h-screen font-sans selection:bg-brand-purple">
 
   <main class="w-full max-w-md mx-auto p-6 flex flex-col gap-6 md:max-w-4xl md:py-12">
     
     <!-- Header -->
     <header class="text-center space-y-2">
-      <h1 class="text-3xl font-extrabold tracking-tight">API calcularkm · Playground e Mapa</h1>
-      <h3 class="text-xl text-slate-600 dark:text-slate-300">Teste rápido do endpoint e visualização de rota</h3>
-      <p class="text-slate-500 text-sm">Backend padrão: http://localhost:8080</p>
+      <h1 class="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-purple">
+        Treina-DEV House Route Tracker
+      </h1>
+      <h3 class="text-xl">Rastreamento de Rota em Tempo Real</h3>
+      <p class="text-gray-400 text-sm">Destino: CEP 74961-070</p>
     </header>
-
-    <!-- Playground da API /distance -->
-    <section id="playground" class="rounded-xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
-      <h2 class="text-lg font-semibold">Playground do endpoint /distance</h2>
-      <p class="text-sm text-slate-600 dark:text-slate-300">Envie uma requisição ao backend com Accept-Language e veja o retorno formatado.</p>
-      <form id="distanceForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="space-y-2">
-          <label class="text-xs text-slate-500">Latitude do usuário</label>
-          <input id="inpUserLat" type="number" step="0.000001" placeholder="-23.550520" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md p-2">
-        </div>
-        <div class="space-y-2">
-          <label class="text-xs text-slate-500">Longitude do usuário</label>
-          <input id="inpUserLng" type="number" step="0.000001" placeholder="-46.633308" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md p-2">
-        </div>
-        <div class="space-y-2">
-          <label class="text-xs text-slate-500">Latitude destino</label>
-          <input id="inpTargetLat" type="number" step="0.000001" placeholder="-22.906847" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md p-2">
-        </div>
-        <div class="space-y-2">
-          <label class="text-xs text-slate-500">Longitude destino</label>
-          <input id="inpTargetLng" type="number" step="0.000001" placeholder="-43.172896" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md p-2">
-        </div>
-        <div class="space-y-2">
-          <label class="text-xs text-slate-500">Idioma (Accept-Language)</label>
-          <select id="inpLocale" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md p-2">
-            <option value="pt-BR">pt-BR</option>
-            <option value="en-US">en-US</option>
-            <option value="es-ES">es-ES</option>
-            <option value="fr-FR">fr-FR</option>
-          </select>
-        </div>
-        <div class="flex items-end">
-          <button type="submit" class="w-full py-3 rounded-md bg-brand-600 text-white hover:bg-brand-700">Enviar</button>
-        </div>
-      </form>
-      <div id="distanceResult" class="text-sm text-slate-600 dark:text-slate-300"></div>
-    </section>
 
     <!-- Botões de Ação -->
     <div class="flex flex-col gap-3">
@@ -204,7 +144,7 @@
     </div>
 
     <!-- Seção do Mapa -->
-    <section id="mapa" class="bg-brand-gray/50 backdrop-blur-md border border-white/10 p-6 rounded-3xl shadow-2xl space-y-6">
+    <section class="bg-brand-gray/50 backdrop-blur-md border border-white/10 p-6 rounded-3xl shadow-2xl space-y-6">
       
       <p 
         id="info" 
@@ -252,21 +192,6 @@
   </main>
 
   <script>
-    // Alternar tema claro/escuro (persistência em localStorage)
-    const themeToggle = document.getElementById('themeToggle');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
-    function applyTheme(mode) {
-      if (mode === 'dark') document.documentElement.classList.add('dark');
-      else document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', mode);
-    }
-    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
-    themeToggle?.addEventListener('click', () => {
-      const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-      applyTheme(next);
-    });
-
     // ============================================
     // CONSTANTES E CONFIGURAÇÕES
     // ============================================
@@ -622,52 +547,6 @@
     // INICIALIZAÇÃO
     // ============================================
     console.log("✅ Aplicação carregada com sucesso!");
-
-    // ============================================
-    // PLAYGROUND: chamada ao backend /distance
-    // ============================================
-    const distanceForm = document.getElementById('distanceForm');
-    const distanceResult = document.getElementById('distanceResult');
-    const inpUserLat = document.getElementById('inpUserLat');
-    const inpUserLng = document.getElementById('inpUserLng');
-    const inpTargetLat = document.getElementById('inpTargetLat');
-    const inpTargetLng = document.getElementById('inpTargetLng');
-    const inpLocale = document.getElementById('inpLocale');
-
-    distanceForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      distanceResult.textContent = 'Enviando...';
-      const payload = {
-        userLat: parseFloat(inpUserLat.value),
-        userLng: parseFloat(inpUserLng.value),
-        targetLat: parseFloat(inpTargetLat.value),
-        targetLng: parseFloat(inpTargetLng.value)
-      };
-      // Pequeno default útil
-      if (Number.isNaN(payload.userLat) || Number.isNaN(payload.userLng) || Number.isNaN(payload.targetLat) || Number.isNaN(payload.targetLng)) {
-        distanceResult.textContent = 'Preencha todas as coordenadas.';
-        return;
-      }
-      try {
-        const res = await fetch('http://localhost:8080/distance', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept-Language': inpLocale.value
-          },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`HTTP ${res.status}: ${text}`);
-        }
-        const json = await res.json();
-        distanceResult.innerHTML = `<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-3"><div><strong>distanceKm:</strong> ${json.distanceKm}</div><div><strong>distanceKmFormatted:</strong> ${json.distanceKmFormatted}</div></div>`;
-      } catch (err) {
-        console.error(err);
-        distanceResult.textContent = 'Erro ao chamar backend. Verifique se o serviço está rodando em 8080 e CORS.';
-      }
-    });
   </script>
 
 </body>
